@@ -1,12 +1,10 @@
 <?php
-    if(isset($_POST['enviar-formulario'])) {
+    if($_POST["radio"] == "cesar") {
         $formatosPermitidos = "txt";
         $extensao = pathinfo($_FILES['arquivo']['name'], PATHINFO_EXTENSION);
         if(1){
             $temporario = $_FILES['arquivo']['tmp_name'];
             $palavra = file_get_contents($temporario);
-            echo $palavra;
-            die;
         }
-        header("Location: index.php");
+        echo json_encode($palavra);
     }
