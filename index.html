@@ -45,6 +45,7 @@
   }
 
   $('#form').on('submit', function(e){
+    $("#saida").html("");
     e.preventDefault();
     var formdata = new FormData(this);
     $.ajax({
@@ -56,7 +57,7 @@
       success: function (palavra){
         palavra = JSON.parse(palavra);
         for (let index = 0; index < palavra.length; index++) {
-          $("#saida").html($("#saida").val() + "Rotação: " + (index+1) + " => " + palavra[index] + "\n");
+          $("#saida").html($("#saida").val() + "Rotação: " + palavra[index][1] + " => " + palavra[index][0] + "\n");
         }
       }
     })

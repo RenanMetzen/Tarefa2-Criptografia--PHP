@@ -1,5 +1,6 @@
 <?php
     if($_POST["radio"] == "cesar") {
+        $arrayResposta = array();
         $arrayNovasPalavras = array();
         $formatosPermitidos = "txt";
         $extensao = pathinfo($_FILES['arquivo']['name'], PATHINFO_EXTENSION);
@@ -12,12 +13,29 @@
             for ($i=1; $i < count($arrayLetras); $i++) {
                 $palavraPronta = '';
                 for ($j=0; $j < count($arrayPalavra); $j++) {
-                    $letra = $arrayLetras[(array_search($arrayPalavra[$j], $arrayLetras) + $i) % 26];
-                    $palavraPronta .= $letra;
+                    $letra = $arrayLetras[(array_search(strtolower($arrayPalavra[$j]), $arrayLetras) + $i) % 26];
+                    if(ctype_upper($arrayPalavra[$j])){
+                        $palavraPronta .= strtoupper($letra);
+                    }else{
+                        $palavraPronta .= $letra;
+                    }
                 }
                 $arrayNovasPalavras[] = $palavraPronta;
             }
+
+            for ($i=0; $i < count($arrayNovasPalavras); $i++) { 
+                for ($j=0; $j < count($arrayPalavras); $j++) {
+                    if(strtolower($arrayNovasPalavras[$i]) == strtolower(str_replace("\r", "", $arrayPalavras[$j]))){
+                        $arrayResposta[] = [$arrayNovasPalavras[$i], $i+1];
+                    }
+                }
+            }
+            for ($i=0; $i < count($arrayNovasPalavras); $i++) { 
+                $arrayResposta[] = [$arrayNovasPalavras[$i], $i+1];
+            }
         }
-        echo json_encode($arrayNovasPalavras);
+        echo json_encode($arrayResposta);
+    }elseif($_POST["radio"] == "vigenere") {
+        
     }
 ?>
