@@ -57,7 +57,7 @@
       success: function (palavra){
         palavra = JSON.parse(palavra);
         for (let index = 0; index < palavra.length; index++) {
-          $("#saida").html($("#saida").val() + "Rotação " + palavra[index][1] + " => " + palavra[index][0] + "\n");
+          $("#saida").html($("#saida").val() + "Chave " + palavra[index][1] + " => " + palavra[index][0] + "\n");
         }
       }
     })
