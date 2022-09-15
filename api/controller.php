@@ -16,7 +16,7 @@
                 while(($line=fgets($stream))!==false) { 
                     $palavras .= preg_replace(array("/(á|à|ã|â|ä)/","/(Á|À|Ã|Â|Ä)/","/(é|è|ê|ë)/","/(É|È|Ê|Ë)/","/(í|ì|î|ï)/","/(Í|Ì|Î|Ï)/","/(ó|ò|õ|ô|ö)/","/(Ó|Ò|Õ|Ô|Ö)/","/(ú|ù|û|ü)/","/(Ú|Ù|Û|Ü)/","/(ñ)/","/(Ñ)/", "/ç/"),explode(" ","a A e E i I o O u U n N c"),$line);
                 }
-                $arrayPalavras = explode("\r\n", $palavras);
+                $arrayPalavras = explode("\n", str_replace("\r", "", $palavras));
                 for ($i=1; $i < count($arrayLetras); $i++) {
                     $palavraPronta = '';
                     for ($j=0; $j < count($arrayPalavra); $j++) {
@@ -42,7 +42,7 @@
                 array_unshift($arrayResposta, "vazio");
             }
         }
-        echo json_encode($palavras);
+        echo json_encode($arrayResposta);
     }
     elseif($_POST["radio"] == "vigenere") {
         // $chave = "";
