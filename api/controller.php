@@ -42,7 +42,7 @@
                 array_unshift($arrayResposta, "vazio");
             }
         }
-        echo json_encode($arrayPalavras);
+        echo json_encode($palavras);
     }
     elseif($_POST["radio"] == "vigenere") {
         // $chave = "";
