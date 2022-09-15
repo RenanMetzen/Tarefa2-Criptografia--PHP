@@ -21,11 +21,6 @@
       <input type="file" required name="arquivo">
     </div>
     <br>
-    <div id="divChave" style="display:none">
-      <label for="chave">Chave:</label><br>
-      <input type="text" id="chave" name="chave">
-    </div>
-    <br>
     <input type="submit" name="enviar-formulario">
   </form>
   <br>
@@ -35,15 +30,6 @@
 </html>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 <script>
-  function vigenere(){
-    document.getElementById("divChave").style.display = 'block';
-    document.getElementById("chave").required = true;
-  }
-  function cesar(){
-    document.getElementById("divChave").style.display = 'none';
-    document.getElementById("chave").required = false;
-  }
-
   $('#form').on('submit', function(e){
     $("#saida").html("");
     e.preventDefault();
@@ -56,8 +42,16 @@
       contentType: false,
       success: function (palavra){
         palavra = JSON.parse(palavra);
-        for (let index = 0; index < palavra.length; index++) {
+        if(palavra[0] == "cesar"){
+          for (let index = 1; index < palavra.length; index++) {
+            $("#saida").html($("#saida").val() + "Chave " + palavra[index][1] + " => " + palavra[index][0] + "\n");
+          }
+        }
+        else if(palavra[0] == "vigenere"){
           $("#saida").html($("#saida").val() + "Chave " + palavra[index][1] + " => " + palavra[index][0] + "\n");
+        }
+        else{
+          $("#saida").html("O arquivo informado está vazio!");
         }
       }
     })
