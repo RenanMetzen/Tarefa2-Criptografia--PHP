@@ -40,16 +40,36 @@
             }
         }
         elseif($_POST["radio"] == "vigenere") {
-            // $chave = "";
-            // for ($i=0; $i < count($arrayPalavra); $i++) {
-            //     for ($j=0; $j < count($arrayLetras); $j++) {
-            //         for ($j=0; $j < count($arrayLetras); $j++) {
-            //             for ($j=0; $j < count($arrayLetras); $j++) {
-
-            //             }                
-            //         }            
-            //     }
-            // }
+            $arrayResultados = array();
+            $chave = "";
+            for ($j=0; $j < count($arrayLetras); $j++) {
+                for ($k=0; $k < count($arrayLetras); $k++) {
+                    for ($l=1; $l < count($arrayLetras); $l++) {
+                        $chave = [$arrayLetras[$j],$arrayLetras[$k],$arrayLetras[$l],$arrayLetras[$j],$arrayLetras[$k],$arrayLetras[$l]];
+                        $chaveMontada = $arrayLetras[$j].$arrayLetras[$k].$arrayLetras[$l];
+                        $palavraMontada = "";
+                        for ($i=0; $i < count($arrayPalavra); $i++) {
+                            $posicao = array_search(strtolower($arrayPalavra[$i]), $arrayLetras) - array_search(strtolower($chave[$i]), $arrayLetras);
+                            if($posicao < 0){
+                                $posicao += 26;
+                            }
+                            if(ctype_upper($arrayPalavra[$i])){
+                                $palavraMontada .= strtoupper($arrayLetras[$posicao]);
+                            }else{
+                                $palavraMontada .= $arrayLetras[$posicao];
+                            }
+                        }
+                        if(in_array(strtolower($palavraMontada), $arrayPalavras)){
+                            $resposta = [$palavraMontada, strtoupper($chaveMontada)];
+                            break 3;
+                        }else{
+                            array_push($arrayResposta, [$palavraMontada, strtoupper($chaveMontada)]);
+                        }
+                    }                
+                }            
+            }
+            array_unshift($arrayResposta, $resposta);
+            array_unshift($arrayResposta, "vigenere");
         }
     }
     else{

@@ -1,37 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Criptografia</title>
-</head>
-<body>
-  <form action="api/controller.php" method="POST" id="form" enctype="multipart/form-data">
-    <div id="divRadio">
-      Tipo:<br>
-      <label for="arquivo">César</label>
-      <input type="radio" onclick="cesar()" name="radio" id="radio" value="cesar" checked="checked">
-      <label for="arquivo">Vigenère</label>
-      <input type="radio" onclick="vigenere()" name="radio" id="radio" value="vigenere">
-    </div>
+  <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criptografia</title>
+  </head>
+  <body>
+    <form action="api/controller.php" method="POST" id="form" enctype="multipart/form-data">
+      <div id="divRadio">
+        Tipo:<br>
+        <label for="arquivo">César</label>
+        <input type="radio" name="radio" id="radio" value="cesar" checked="checked">
+        <label for="arquivo">Vigenère</label>
+        <input type="radio" name="radio" id="radio" value="vigenere">
+      </div>
+      <br>
+      <div id="divArquivo">
+        <label for="arquivo">Arquivo</label><br>
+        <input type="file" required name="arquivo">
+      </div>
+      <br>
+      <input type="submit" name="enviar-formulario">
+    </form>
     <br>
-    <div id="divArquivo">
-      <label for="arquivo">Arquivo</label><br>
-      <input type="file" required name="arquivo">
-    </div>
-    <br>
-    <input type="submit" name="enviar-formulario">
-  </form>
-  <br>
-  <label for="saida">Saída</label><br>
-  <textarea id="saida" style="height:400px; width:250px;"></textarea>
-</body>
+
+    <label for="saida">Saída</label><br>
+    <textarea readonly id="saida" style="height:400px; width:250px;"></textarea>
+    <textarea readonly id="saidaVigenere" hidden></textarea>
+
+    <input onclick="download()" hidden id="btnBaixar" type="submit" value="Baixar palavras">
+
+  </body>
 </html>
+
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+
 <script>
+  function download() {
+    var element = document.createElement('a');
+    var texto = $('#saidaVigenere').val();
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(texto));
+    element.setAttribute('download', "respostas_vigenere.txt");
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+  }
+
   $('#form').on('submit', function(e){
-    $("#saida").html("");
+    $("#saida").html("Carregando...");
+    $("#btnBaixar").hide();
+    $("#saidaVigenere").html("");
     e.preventDefault();
     var formdata = new FormData(this);
     $.ajax({
@@ -41,14 +64,19 @@
       processData: false,
       contentType: false,
       success: function (palavra){
+        $("#saida").html("");
         palavra = JSON.parse(palavra);
         if(palavra[0] == "cesar"){
           for (let index = 1; index < palavra.length; index++) {
-            $("#saida").html($("#saida").val() + "Chave " + palavra[index][1] + " => " + palavra[index][0] + "\n");
+            $("#saida").html($("#saida").val() + "Rotação " + palavra[index][1] + " => " + palavra[index][0] + "\n");
           }
         }
         else if(palavra[0] == "vigenere"){
-          $("#saida").html($("#saida").val() + "Chave " + palavra[index][1] + " => " + palavra[index][0] + "\n");
+          $("#saida").html($("#saida").val() + "Chave " + palavra[1][1] + " => " + palavra[1][0] + "\n");
+          for (let index = 2; index < palavra.length; index++) {
+            $("#saidaVigenere").html($("#saidaVigenere").val() + "Chave " + palavra[index][1] + " => " + palavra[index][0] + "\n");
+          }
+          $("#btnBaixar").show();
         }
         else{
           $("#saida").html("O arquivo informado está vazio!");
