@@ -4,33 +4,30 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
     <title>Criptografia</title>
   </head>
   <body>
     <form action="api/controller.php" method="POST" id="form" enctype="multipart/form-data">
       <div id="divRadio">
-        Tipo:<br>
-        <label for="arquivo">César</label>
-        <input type="radio" name="radio" id="radio" value="cesar" checked="checked">
-        <label for="arquivo">Vigenère</label>
-        <input type="radio" name="radio" id="radio" value="vigenere">
+        <input type="radio" name="radio" id="radioCesar" checked="checked" value="cesar" >
+        <label for="radioCesar">César</label>
+        <input type="radio" name="radio" id="radioVigenere" value="vigenere">
+        <label for="radioVigenere">Vigenère</label>
       </div>
       <br>
       <div id="divArquivo">
-        <label for="arquivo">Arquivo</label><br>
-        <input type="file" required name="arquivo">
+        <label for="arquivo">Arquivo</label>
+        <input type="file" id="arquivo" required name="arquivo">
       </div>
       <br>
-      <input type="submit" name="enviar-formulario">
+      <input type="submit" id="enviar-formulario" name="enviar-formulario" value="Descriptografar">
+      <label for="saida">Saída</label>
+      <textarea readonly id="saida"></textarea>
+      <textarea readonly id="saidaVigenere" hidden></textarea>
+      <button onclick="download()" disabled id="btnBaixar" type="button">Baixar palavras</button>
     </form>
     <br>
-
-    <label for="saida">Saída</label><br>
-    <textarea readonly id="saida" style="height:400px; width:250px;"></textarea>
-    <textarea readonly id="saidaVigenere" hidden></textarea>
-
-    <input onclick="download()" hidden id="btnBaixar" type="submit" value="Baixar palavras">
-
   </body>
 </html>
 
@@ -42,18 +39,15 @@
     var texto = $('#saidaVigenere').val();
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(texto));
     element.setAttribute('download', "respostas_vigenere.txt");
-
     element.style.display = 'none';
     document.body.appendChild(element);
-
     element.click();
-
     document.body.removeChild(element);
   }
 
   $('#form').on('submit', function(e){
     $("#saida").html("Carregando...");
-    $("#btnBaixar").hide();
+    $("#btnBaixar").prop("disabled",true);
     $("#saidaVigenere").html("");
     e.preventDefault();
     var formdata = new FormData(this);
@@ -76,7 +70,7 @@
           for (let index = 2; index < palavra.length; index++) {
             $("#saidaVigenere").html($("#saidaVigenere").val() + "Chave " + palavra[index][1] + " => " + palavra[index][0] + "\n");
           }
-          $("#btnBaixar").show();
+          $("#btnBaixar").prop("disabled",false);
         }
         else{
           $("#saida").html("O arquivo informado está vazio!");
